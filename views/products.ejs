@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <script>
+        var isLoggedIn = jQuery('body').hasClass('logged-in');
+        if(!isLoggedIn){
+            window.location.href = '/login';
+        }
+    </script>
+    </head>
+    <script>
+        async function addProd()
+        {
+            const name = document.getElementById('Name').value;
+            const qty = document.getElementById('Quantity').value;
+            const result = await fetch('/api/products/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                name,
+                qty
+            })
+            }).then((res) => res.json());
+            console.log(result.status);
+            if (result.status === 'ok') {
+                window.location.href = '/products';
+            } else {
+                alert(result.error)
+            }
+        }
+        function editProd(i)
+        {
+            const newqty = document.getElementById('new'+i).value;
+            fetch('/api/products/edit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                newqty,i
+            })
+            }).then((res) => res.json())
+            if (result.status === 'ok') {
+                window.location.href = '/products';
+            } else {
+                alert(result.error)
+            }
+        }
+    </script>
+    <body>
+        <table id="table" >  
+            <thead>  
+                <tr>  
+                    <th>Product name</th>  
+                    <th>Quantity</th>  
+                    <th>Edit Quantity</th>
+                </tr>  
+            </thead>  
+             <tbody>  
+             <% for(var i=0; i < print.length; i++) { %>
+                <tr>  
+                    <td [id]="name"+i><%= print[i].Name %></td>  
+                    <td [id]="qty"+i><%= print[i].Quantity %></td>
+                    <td><input type="number" [id]="new"+i placeholder="New Quantity"/><br><input id="edit" type="submit" onclick="editProd(i)" value="Edit"/></td>
+                </tr>                                   
+             <% } %>
+             </tbody>
+        </table>   
+        <input type="text" id="Name" placeholder="Name"/>
+        <input type="number" id="Quantity" placeholder="Quantity"/>
+        <input id="add" type="submit" onclick="addProd()" value="Add Product"/>
+        <a href="/login">Logout</a>
+    </body>
+</html>

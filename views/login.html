@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>Login</h1>
+        <p>
+            <form>
+                <input type="text" name="username" id="username" placeholder="Username" required/>
+                <input type="password" name="password" id="password" placeholder="Password" required/>
+                <input type="submit" value="Login"/>
+            </form>
+        </p>
+        <script>
+            const form = document.querySelector('form')
+			form.addEventListener('submit', logUser)
+
+			async function logUser(event) {
+				event.preventDefault()
+				const username = document.getElementById('username').value
+				const password = document.getElementById('password').value
+
+				const result = await fetch('/api/login', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						username,
+						password
+					})
+				}).then((res) => res.json())
+
+				if (result.status === 'ok') {
+					localStorage.setItem('token', result.token)
+					window.location.href = '/products';
+				} else {
+					alert(result.error)
+				}
+			}
+        </script>
+    </body>
+</html>

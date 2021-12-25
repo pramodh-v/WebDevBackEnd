@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>Register</h1>
+        <p>
+            <form>
+                <input type="text" name="name" id="name" placeholder="Name" required/>
+                <input type="text" name="username" id="username" placeholder="Username" required/>
+                <input type="password" name="password" id="password" placeholder="Password" required/>
+                <input type="password" name="password2" id="confirm" placeholder="Confirm Password" required/>
+                <input type="date" name="dob" id="dob" placeholder="Date of Birth" required/>
+                <input type="tel" name="phone" id="phone" placeholder="Phone" required/>
+                <input type="submit" value="Register"/>
+            </form>
+            <a href="/login">Login</a>
+        </p>
+        <script>
+            const form = document.querySelector('form')
+			form.addEventListener('submit', regUser)
+
+			async function regUser(event) {
+				event.preventDefault()
+                const name = document.getElementById('name').value
+				const username = document.getElementById('username').value
+				const password = document.getElementById('password').value
+                const password2 = document.getElementById('confirm').value
+                const dob = document.getElementById('dob').value
+                const phone = document.getElementById('phone').value
+
+				const result = await fetch('/api/register', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						name,
+                        username,
+						password,
+                        password2,
+                        dob,
+                        phone
+					})
+				}).then((res) => res.json())
+
+				if (result.status === 'ok') {
+					window.location.href = '/products';
+				} else {
+					alert(result.error)
+				}
+			}
+        </script>
+    </body>
+</html>
