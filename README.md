@@ -1,3 +1,3 @@
-Kurukshetra Web dev task
+CTF Web dev task
 
 Only the edit product quantity part is left
